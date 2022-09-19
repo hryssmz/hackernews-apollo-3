@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "moduleResolution": "Node",
+    "rootDir": "./src",
+    "outDir": "./dist"
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "typeRoots": ["./types", "./node_modules/@types"]
+    }
+  },
+  "include": ["./src", "./types"]
+}
