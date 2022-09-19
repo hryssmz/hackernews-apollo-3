@@ -120,3 +120,21 @@ npm install -D @types/bcryptjs
 npm install jsonwebtoken
 npm install -D @types/jsonwebtoken
 ```
+
+#### 1.3.6. morgan
+
+---
+
+```bash
+npm install morgan
+npm install -D @types/morgan
+```
+
+#### 1.3.7. CORS
+
+---
+
+```bash
+npm install cors
+npm install -D @types/cors
+```
