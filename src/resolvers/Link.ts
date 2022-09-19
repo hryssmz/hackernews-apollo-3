@@ -1,6 +1,6 @@
 // resolvers/Link.ts
 import prisma from "../utils/prisma";
-import type { Link, User } from "@prisma/client";
+import type { Link, User, Vote } from "@prisma/client";
 
 async function postedBy(parent: Link): Promise<User | null> {
   const user = await prisma.link
@@ -11,6 +11,13 @@ async function postedBy(parent: Link): Promise<User | null> {
   return user;
 }
 
-const LinkResolver = { postedBy };
+async function votes(parent: Link): Promise<Vote[]> {
+  const votes = await prisma.link
+    .findUnique({ where: { id: parent.id } })
+    .votes();
+  return votes;
+}
+
+const LinkResolver = { postedBy, votes };
 
 export default LinkResolver;

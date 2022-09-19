@@ -11,11 +11,7 @@ import { WebSocketServer } from "ws";
 import { useServer } from "graphql-ws/lib/use/ws";
 import { PubSub } from "graphql-subscriptions";
 import { getUserId } from "../utils/crypto";
-import Query from "../resolvers/Query";
-import Mutation from "../resolvers/Mutation";
-import Subscription from "../resolvers/Subscription";
-import UserResolver from "../resolvers/User";
-import LinkResolver from "../resolvers/Link";
+import resolvers from "../resolvers";
 import type { Server } from "http";
 import type { Config } from "apollo-server-core";
 import type { Request } from "express";
@@ -29,14 +25,6 @@ const context: (options: { req?: Request }) => Context = ({ req }) => ({
   ...req,
   userId: req && req.headers.authorization ? getUserId(req) : null,
 });
-
-const resolvers: Config["resolvers"] = {
-  Query,
-  Mutation,
-  Subscription,
-  User: UserResolver,
-  Link: LinkResolver,
-};
 
 const typeDefs: Config["typeDefs"] = fs.readFileSync(
   path.join(__dirname, "..", "schema.graphql"),
