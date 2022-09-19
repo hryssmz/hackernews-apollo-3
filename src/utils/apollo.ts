@@ -6,9 +6,14 @@ import {
   ApolloServerPluginDrainHttpServer,
   ApolloServerPluginLandingPageLocalDefault,
 } from "apollo-server-core";
+import { makeExecutableSchema } from "@graphql-tools/schema";
+import { WebSocketServer } from "ws";
+import { useServer } from "graphql-ws/lib/use/ws";
+import { PubSub } from "graphql-subscriptions";
 import { getUserId } from "../utils/crypto";
 import Query from "../resolvers/Query";
 import Mutation from "../resolvers/Mutation";
+import Subscription from "../resolvers/Subscription";
 import UserResolver from "../resolvers/User";
 import LinkResolver from "../resolvers/Link";
 import type { Server } from "http";
@@ -28,6 +33,7 @@ const context: (options: { req?: Request }) => Context = ({ req }) => ({
 const resolvers: Config["resolvers"] = {
   Query,
   Mutation,
+  Subscription,
   User: UserResolver,
   Link: LinkResolver,
 };
@@ -37,7 +43,16 @@ const typeDefs: Config["typeDefs"] = fs.readFileSync(
   "utf8"
 );
 
+const schema = makeExecutableSchema({ typeDefs, resolvers });
+
+export const pubsub = new PubSub();
+
 export async function startApolloServer(httpServer: Server) {
+  const wsServer = new WebSocketServer({
+    server: httpServer,
+    path: "/graphql",
+  });
+  const serverCleanup = useServer({ schema }, wsServer);
   const server = new ApolloServer({
     typeDefs,
     resolvers,
@@ -46,6 +61,15 @@ export async function startApolloServer(httpServer: Server) {
     cache: "bounded",
     plugins: [
       ApolloServerPluginDrainHttpServer({ httpServer }),
+      {
+        async serverWillStart() {
+          return {
+            async drainServer() {
+              await serverCleanup.dispose();
+            },
+          };
+        },
+      },
       ApolloServerPluginLandingPageLocalDefault({ embed: true }),
     ],
   });

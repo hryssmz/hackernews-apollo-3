@@ -138,3 +138,20 @@ npm install -D @types/morgan
 npm install cors
 npm install -D @types/cors
 ```
+
+#### 1.3.8. GraphQL WebSocket
+
+---
+
+```bash
+npm install graphql-ws ws @graphql-tools/schema apollo-server-core
+npm install -D @types/ws
+```
+
+#### 1.3.9. GraphQL PubSub
+
+---
+
+```bash
+npm install graphql-subscriptions
+```

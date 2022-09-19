@@ -1,6 +1,7 @@
 // resolvers/Mutation.ts
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { pubsub } from "../utils/apollo";
 import prisma from "../utils/prisma";
 import { APP_SECRET } from "../utils/crypto";
 import type { Link, User } from "@prisma/client";
@@ -52,6 +53,8 @@ async function post(
       postedBy: userId !== null ? { connect: { id: userId } } : undefined,
     },
   });
+  pubsub.publish("NEW_LINK", newLink);
+
   return newLink;
 }
 
