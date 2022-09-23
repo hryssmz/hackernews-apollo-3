@@ -1,26 +1,18 @@
 // resolvers/Query.ts
 import prisma from "../utils/prisma";
-import type { Link, Prisma } from "@prisma/client";
+import type { Link } from "@prisma/client";
+import type { Feed, LinkOrderBy } from "../utils/types";
 
 function info(): string {
   return "This is the API of a Hackernews Clone";
-}
-
-interface LinkOrderBy {
-  description?: Prisma.SortOrder;
-  url?: Prisma.SortOrder;
-  createdAt?: Prisma.SortOrder;
-}
-
-interface Feed {
-  links: Link[];
-  count: number;
 }
 
 async function feed(
   _: unknown,
   args: { filter?: string; skip?: number; take?: number; orderBy?: LinkOrderBy }
 ): Promise<Feed> {
+  const id = `main-feed:${JSON.stringify(args)}`;
+
   const where = args.filter
     ? {
         OR: [
@@ -39,11 +31,14 @@ async function feed(
 
   const count = await prisma.link.count({ where });
 
-  return { links, count };
+  return { id, links, count };
 }
 
-async function link(_: unknown, args: Pick<Link, "id">): Promise<Link | null> {
-  const link = prisma.link.findUnique({ where: { id: args.id } });
+async function link(_: unknown, args: Pick<Link, "id">): Promise<Link> {
+  const link = await prisma.link.findUnique({ where: { id: args.id } });
+  if (link === null) {
+    throw new Error("No such link found");
+  }
   return link;
 }
 

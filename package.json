@@ -4,7 +4,9 @@
   "description": "## 1. Setup",
   "main": "index.js",
   "scripts": {
-    "dev": "npx ts-node src/index.ts",
+    "dev": "nodemon src/index.ts",
+    "seed": "npx ts-node src/scripts/seed.ts",
+    "start": "npx ts-node src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -22,6 +24,7 @@
     "@typescript-eslint/parser": "^5.37.0",
     "eslint": "^8.23.1",
     "eslint-config-prettier": "^8.5.0",
+    "nodemon": "^2.0.20",
     "prettier": "^2.7.1",
     "prettier-plugin-sh": "^0.12.8",
     "prisma": "^4.3.1",

@@ -73,6 +73,14 @@ found 0 vulnerabilities
 Successfully created .eslintrc.js file in /home/hryssmz/projects/hackernews-graphql/hackernews-node
 ```
 
+#### 1.2.4. nodemon
+
+---
+
+```bash
+npm install -D nodemon
+```
+
 ### 1.3. Initialize Express Project
 
 ---
